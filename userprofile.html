@@ -1,0 +1,65 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <p>Account</p>
+        <p>Name : <input type="text"disabled value="{{obj.name}}"> </p>
+        <p>Email : <input type="text"disabled value="{{obj.email}}"> </p>
+        <p>Phone : <input type="text"disabled value="{{obj.phone}}"> </p>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <h1>Connected Users</h1>
+            {% for user in con_users %}
+                <Div className="bg-dark p-2 shadow"> 
+                    <p>{{user.name}} {{user.friends.all | length }} connections
+                        <sub>
+                            {%  if user.friends.all and request.user.friends.all %}
+                                {% for i in request.user.friends.all  %}
+                                    {% if i in  user.friends.all   %}
+                                        {%if i == request.user %}
+                                            {% else %}
+                                                mutual friends with {{i.name}}
+                                            {%endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </sub>
+                    </p>
+                </Div> 
+            {% empty %}
+            No Connected Users 
+            {% endfor %}
+        </div>
+    </div>
+    <!--<div class="col-lg-4">
+        <div class="card">
+            <h2>All Users</h2>
+            {%if all_users %}
+                {%for user in all_users %}
+                    {% if not user.is_superuser %}
+                        {% if user not in request.user.friends.all and user != request.user %}
+                            <h4><a href="{% url 'profile' user.phone %}">{{user}}</a> <a href="{% url 'send_friend_request' user.id %}">Add</a></h4>
+                        {% else %}
+                            <h4><a href="{% url 'profile' user.phone %}">{{user}}</a></h4>
+                        {% endif %}
+                    {%endif%}
+                {% empty %}
+                    No Users Found
+                {% endfor  %}
+            {%endif%}
+        </div>    
+    </div> -->
+        <div class="col-lg-4">
+            <h2>Connection Requests </h2>
+
+            {% for req in requests %}
+                <h4><h4><a href="{% url 'profile' user.phone %}">{{req.from_user}}</a></h4> <a href="{% url 'accept_friend_request' req.id %}">Accept</a></h4>
+            {% empty %}
+            No Connections Requests
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock %}

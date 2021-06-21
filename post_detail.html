@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load hitcount_tags %}
+
+{% block content %}
+    <div class="pt-4 mt-4 text-center container col-md-10">
+        {% if obj %}
+
+            <h3 class="posttitle">{{obj.title}}</h3>
+
+            {% if obj.image %}
+                <img src="{{ obj.image.url }}" style="width:650px;height:250px;" class=" img-fluid"/>
+            {% endif %}
+            <!-- <div class="details date postdate">
+                <span style="color:teal;">{{obj.author.username|title}}</span>  {{obj.created}}
+                {%if obj.author == request.user and  user.is_authenticated %}|
+                    {% if obj.status == 'publish' %}
+                        <small class="  text-danger" >{{obj.status|title}}ed</small>
+                    {% else %}
+                        <small class=" display-5 text-danger" >{{obj.status|title}}</small>
+                        <p ><span class="text-danger">Note* :</span> Update To publish this post </p>
+                    {% endif %}
+                {% endif %}
+            </div> -->
+
+            <!-- <p class="tags col-lg-10 mx-2">
+                 {% for tag in obj.tags.all %}
+                <a style="border-radius:10px; padding:3px;font-size: 15px;font-family: monospace;" class="text-decoration-none text-white bg-dark" href="{% url 'post_list_by_tag' tag.slug %}">{{ tag.name }}
+                </a>
+                {% if not forloop.last %}  {% endif %}
+                {% endfor %}
+            </p> -->
+
+            <div class="postcontent m-auto col-lg-10 text-justify">{{obj.content | safe|linebreaks}}
+            <p>Views: {% get_hit_count for obj %}</p>
+            </div>
+            {%if obj.author == request.user and  user.is_authenticated %}
+
+            <div class=" containerbutton pt-3 mt-2 mb-2 center">
+                <a href="{%url 'update_post' obj.slug %}" class="btn text-decoration-none btn-outline-info btn-link">UPDATE</a>
+                <a href="{%url 'post_delete' obj.slug %}" class="btn text-decoration-none btn-outline-info btn-link">DELETE</a>
+            </div>
+            {% endif %}
+
+        <!-- {% if obj.status == 'publish' %}
+            {%if similar_posts %}
+                <div class="jumbotron m-auto col-lg-10 mt-3 pt-3 text-justify ">
+                    <h2 class="heading">Similar posts</h2>
+                    {% for post in similar_posts %}
+                        <a href="{{post.get_absolute_url }}"style="border-radius:5px; padding:3px;font-size: 15px;font-family: Roboto;background-color: teal;" class=" text-decoration-none text-white ">{{post.title}} <br>
+                        </a>
+                    {% empty %}
+                        There are no similar posts yet
+                    {% endfor %}
+                </div>
+            {% endif %} -->
+
+            <!-- <div class="comment pt-3 m-auto text-left offset-lg-1">
+            {% with comments.count as total_comments %}
+            <h2>
+            {{ total_comments }} comment{{ total_comments|pluralize }}
+            </h2>
+            {% endwith %} -->
+
+
+
+            <!-- {% for comment in comments %}
+                <div class="row m-auto mt-3 col-md-10" style="border :1px solid purple;text-align:left">
+                    <div    class="col-lg-1 col-sm-1 bg-dark text-white">
+                    <small>{{ comment.created.date }}</small>
+                    </div>
+                    <div class="col-lg-3  col-sm-6">
+                    {{comment.name}} :
+                    </div>
+                    <div class="col-lg-7 col-sm-5">
+                    {{ comment.body|linebreaks }}
+                    </div>
+                </div>
+               <p>  </p>
+                {% empty %}
+                <p>There are no comments yet.</p>
+            {% endfor %} -->
+
+            <!-- {% if new_comment %}
+            <h2>Your comment has been added.</h2>
+            {% else %}
+            <div class="text-left form pt-3">
+                <h2>Add a new comment</h2>
+                <form  method="post">
+                {{ comment_form.as_p }}
+                {% csrf_token %}
+                <input type="submit" value="Add comment" class="btn btn-primary">
+                </form>
+            </div>
+            {% endif %} -->
+
+            <!-- </div> -->
+        {% else %}
+
+
+
+        {% endif %}
+
+        {% endif %}
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+  
+{% extends  'base.html' %}
+{% block content %}
+<div class="card">
+    {% if obj %}
+
+
+    {% for post in obj %}
+        <div class="col-lg-8 offset-lg-1 content m-auto text-justify pt-4">
+            <div>
+
+                {%if post.image %}
+                    <img src="{{ post.image.url }}" style="width:650px;height:350px;" class=" img-fluid"/>
+                {% endif %}
+
+            </div>
+            <h2><a  href="{{post.get_absolute_url}}">{{post.title }}</a></h2>
+
+           
+
+           
+
+               <span>{{post.owner.name|title}}</span>  on <span>{{post.created_at}}</span>
+            <p class="text-justify postcontent m-auto">{{post.content | safe| truncatechars:200 | linebreaks}}</p>
+            <p>Views: {% get_hit_count for post %}</p>
+            <hr>
+        </div>
+    {% endfor %}
+     {% else %}
+    <p>No posts Containing <h4>"{{query}}"</h4></p>
+    {% endif %}
+
+
+</div>
+
+
+{% endblock %}

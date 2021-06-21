@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="card">
+    {% if query %}
+    <h1>User containing "{{ query }}"</h1>
+    <h3>
+    {% with results.count as total_results %}
+        Found {{ total_results }} result{{ total_results|pluralize }}
+    {% endwith %}
+    </h3>
+    {% for user in results %}
+    <h4>{{ user.name }} {%if user not in request.user.friends.all  %}<a href="{% url 'send_friend_request' user.id %}">Send Request</a>{%else %}<sub>Already Friends</sub>{%endif %}</h4>
+    {% empty %}
+    <p>No Users with {{query}} </p>
+    {% endfor %}
+    <p><a href="{% url 'search' %}">Search again</a></p>
+    {% else %}
+    <h1>Search for Users</h1>
+    <form action="." method="get">
+        {{ form.as_p }}
+    <input type="submit" value="Search">
+    </form>
+</div>
+    {% endif %}
+{% endblock %}

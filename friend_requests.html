@@ -1,0 +1,12 @@
+  
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    {% for i in frnd_requests  %}
+        <div>{{i.from_user}} <a href="{% url 'accept_friend_request' i.id %}">Accept Request</a>
+         </div> 
+    {% endfor %}
+{% endblock  %}

@@ -1,0 +1,121 @@
+<!doctype html>
+{% load hitcount_tags %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>{%block title %}
+        Home
+        {% endblock %}
+    </title>
+  </head>
+  <body class="card"> 
+
+    <nav  class="navbar navbar-expand-lg navbar-light bg-primary">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                  <a class="nav-link active " style="color:#fff"  aria-current="page" href="{% url 'home' %}">Home</a>
+                </li>
+                {% if not user.is_authenticated %}
+                    <li class="nav-item"> 
+                      <a class="nav-link" style="color:#fff"  href="{% url 'login' %}">LOGIN</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" style="color:#fff"   href="{% url 'signup' %}">SIGN UP</a>
+                    </li>
+
+                {% else %}
+                    <li class="nav-item"> 
+                      <a  class="nav-link" style="color:#fff"  href="{% url 'logout' %}">LOGOUT</a>
+                    </li>
+                    <li class="nav-item">
+                        <form class="d-flex" id='search' method='get'  action="{% url 'search' %}">
+                        {% csrf_token %}
+                        <a  class="nav-link"  style="color:#fff" href="{% url 'search' %}">Search</a>
+                        </form>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+        <div class="messages pt-2 mt-2 mb-2">
+          {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+    <div class="container-fluid row pt-4 ">
+              
+
+      <div class="col-lg-2 bg-light">
+        {% if  user.is_authenticated %}
+        <ul class="nav flex-column">
+
+          <li class="nav-item" style="background-color:lightblue">
+             <a class="nav-link active" href="{% url 'profile' request.user.phone %}">Profile</a>
+          </li>
+          <br/>
+          <li class="nav-item" style="background-color:lightblue">
+            <a class="nav-link active" href="{% url 'create_post' %}">Create Post</a>
+          </li>
+        </ul>  
+        {% endif %}
+      </div>
+      <div class="col-lg-8 " class='card'>  
+        {% block content %}
+          <h1 >welcome </h1>
+          {% if obj %}
+
+
+            {% for post in obj %}
+                <div class="col-lg-8 offset-lg-1 content m-auto text-justify pt-4">
+                    <div>
+
+                        {%if post.image %}
+                            <img src="{{ post.image.url }}" style="width:650px;height:350px;" class=" img-fluid"/>
+                        {% endif %}
+
+                    </div>
+                    <h2><a  href="{{post.get_absolute_url}}">{{post.title }}</a></h2>
+
+                  
+
+                  
+
+                      <span style="color:red;"><a href="{% url 'profile' post.author.phone%}">{{post.author.name|title}}</a></span>  on <span style="color:teal">{{post.created_at}}</span>
+                    <p class="text-justify postcontent m-auto">{{post.content | safe| truncatechars:200 | linebreaks}}</p>
+                    <p>Views: {% get_hit_count for post %}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+            {% else %}
+            <p>No posts Containing <h4>"{{query}}"</h4></p>
+            {% endif %}
+
+
+        </div>
+        {% endblock %}
+      </div>
+      
+    </div>
+    </div>    
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" /> <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"> </script> <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>-->
+   
+  </body>
+</html>
